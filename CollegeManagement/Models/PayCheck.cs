@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CollegeManagement.Infra.Enums;
+using CollegeManagement.Infra.interfaces;
+
 
 namespace CollegeManagement.Api.Models
 {
-	public class PayCheck
+	public class PayCheck : ICollege, IBase
 	{
 		public int Id { get; set; }
 
@@ -16,7 +19,7 @@ namespace CollegeManagement.Api.Models
 		public int EmployeeId { get; set; }
 
 		public decimal Amount { get; set; }
-		public int Status { get; set; }
+		public PaymentStatus Status { get; set; }
 		public string SpecialNotes { get; set; }
 	}
 }

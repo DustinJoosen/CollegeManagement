@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.Design;
 using System.Linq;
+using CollegeManagement.Infra.interfaces;
 using System.Threading.Tasks;
 
 namespace CollegeManagement.Api.Models
 {
-	public class Class
+	public class Class : ICollege, IBase
 	{
 		public int Id { get; set; }
 
@@ -17,7 +18,6 @@ namespace CollegeManagement.Api.Models
 		public Building Building{ get; set; }
 		public int BuildingId { get; set; }
 
-		//public Employee Mentor{ get; set; }
 		public int MentorId { get; set; }
 
 		public string Name { get; set; }

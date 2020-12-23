@@ -14,5 +14,9 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CollegeManagement.Infra\CollegeManagement.Infra.csproj" />
+  </ItemGroup>
+
 
 </Project>

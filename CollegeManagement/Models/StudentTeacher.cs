@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CollegeManagement.Infra.Enums;
+using CollegeManagement.Infra.interfaces;
+
 
 namespace CollegeManagement.Api.Models
 {
-	public class StudentTeacher
+	public class StudentTeacher : ICollege
 	{
 		public College College { get; set; }
 		public int CollegeId { get; set; }
@@ -13,9 +16,8 @@ namespace CollegeManagement.Api.Models
 		public Student Student { get; set; }
 		public int StudentId { get; set; }
 
-		//public Employee Teacher { get; set; }
 		public int TeacherId { get; set; }
 
-		public int RelationType { get; set; }
+		public RelationType RelationType { get; set; }
 	}
 }

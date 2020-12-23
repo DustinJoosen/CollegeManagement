@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CollegeManagement.Infra.Enums;
+using CollegeManagement.Infra.interfaces;
 
 namespace CollegeManagement.Api.Models
 {
-	public class Employee
+	public class Employee : ICollege, IBase
 	{
 		public int Id { get; set; }
 
@@ -15,7 +17,7 @@ namespace CollegeManagement.Api.Models
 		public Building Building { get; set; }
 		public int BuildingId { get; set; }
 
-		public int EmployeeType { get; set; }
+		public EmployeeType EmployeeType { get; set; }
 		public string Firstname { get; set; }
 		public string Middlename { get; set; }
 		public string Lastname { get; set; }
