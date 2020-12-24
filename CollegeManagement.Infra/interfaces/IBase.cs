@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CollegeManagement.Infra.interfaces
+namespace CollegeManagement.Infra.Interfaces
 {
 	public interface IBase
 	{

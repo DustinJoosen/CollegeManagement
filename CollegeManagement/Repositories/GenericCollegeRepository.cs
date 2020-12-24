@@ -1,5 +1,5 @@
 ﻿using CollegeManagement.Api.Models;
-using CollegeManagement.Infra.interfaces;
+using CollegeManagement.Infra.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

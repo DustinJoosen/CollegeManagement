@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.Design;
 using System.Linq;
-using CollegeManagement.Infra.interfaces;
+using CollegeManagement.Infra.Interfaces;
 using System.Threading.Tasks;
 
 namespace CollegeManagement.Api.Models

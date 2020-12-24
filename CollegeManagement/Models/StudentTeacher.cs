@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CollegeManagement.Infra.Enums;
-using CollegeManagement.Infra.interfaces;
+using CollegeManagement.Infra.Interfaces;
 
 
 namespace CollegeManagement.Api.Models

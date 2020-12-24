@@ -1,3 +1,4 @@
+using AutoMapper;
 using CollegeManagement.Api.Models;
 using CollegeManagement.Api.Repositories;
 using CollegeManagement.Api.Services;
@@ -31,6 +32,7 @@ namespace CollegeManagement.Api
 		{
 			services.AddControllers();
 
+			services.AddAutoMapper(typeof(Startup));
 			services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultDatabase")));
 
 			services.AddScoped<IBuildingService, BuildingService>();

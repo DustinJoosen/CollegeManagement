@@ -1,4 +1,4 @@
-﻿using CollegeManagement.Infra.interfaces;
+﻿using CollegeManagement.Infra.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

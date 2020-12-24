@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CollegeManagement.Infra.Enums;
+﻿using CollegeManagement.Infra.Enums;
 using CollegeManagement.Infra.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace CollegeManagement.Api.Models
+namespace CollegeManagement.Infra.Dtos
 {
-	public class Employee : ICollege, IBase
+	public class EmployeeDto : IBase, ICollege
 	{
 		public int Id { get; set; }
 
-		public College College { get; set; }
+		public CollegeDto College { get; set; }
 		public int CollegeId { get; set; }
 
-		public Building Building { get; set; }
+		public BuildingDto Building { get; set; }
 		public int BuildingId { get; set; }
 
 		public EmployeeType EmployeeType { get; set; }
@@ -26,5 +25,6 @@ namespace CollegeManagement.Api.Models
 		public bool Active { get; set; }
 		public string EmailAddress { get; set; }
 		public string ImageName { get; set; }
+		public string ImageUrl { get; set; }
 	}
 }
