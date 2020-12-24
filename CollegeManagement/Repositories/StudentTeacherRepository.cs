@@ -12,5 +12,6 @@ namespace CollegeManagement.Api.Repositories
 		{
 
 		}
+
 	}
 }

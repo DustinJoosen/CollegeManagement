@@ -2,6 +2,7 @@
 using CollegeManagement.Api.Models;
 using CollegeManagement.Api.Services;
 using CollegeManagement.Infra.Dtos;
+using CollegeManagement.Infra.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -26,14 +27,14 @@ namespace CollegeManagement.Api.Controllers
 
 
 		[HttpGet]
-		public async Task<ActionResult<List<Employee>>> Get()
+		public async Task<ActionResult> Get()
 		{
 			var employees = await _service.GetAll();
 			return Ok(_mapper.Map<List<EmployeeDto>>(employees));
 		}
 
 		[HttpGet("{id}")]
-		public async Task<ActionResult<Employee>> GetById(int id)
+		public async Task<ActionResult> GetById(int id)
 		{
 			var employee = await _service.GetById(id);
 
@@ -80,6 +81,20 @@ namespace CollegeManagement.Api.Controllers
 
 			await _service.Remove(employee);
 			return Ok(_mapper.Map<EmployeeDto>(employee));
+		}
+
+		[HttpGet("{id}/students")]
+		public async Task<ActionResult> GetStudents(int id)
+		{
+			var employee = await _service.GetById(id);
+			if (employee == null)
+				return NotFound();
+
+			if (employee.EmployeeType != EmployeeType.Teacher)
+				return Unauthorized();
+
+			var students = await _service.GetStudents(id);
+			return Ok(_mapper.Map<List<StudentDto>>(students));
 		}
 
 	}

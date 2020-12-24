@@ -15,6 +15,9 @@ namespace CollegeManagement.Api.Models
 		public DbSet<PayCheck> PayChecks { get; set; }
 		public DbSet<Student> Students { get; set; }
 		public DbSet<StudentTeacher> StudentTeachers { get; set; }
+		//public DbSet<Education> Educations{ get; set; }
+		//public DbSet<Subject> Subjects { get; set; }
+		//public DbSet<Lesson> Lessons { get; set; }
 
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -29,8 +32,11 @@ namespace CollegeManagement.Api.Models
 				.WithMany()
 				.HasForeignKey(s => s.TeacherId);
 
-			modelBuilder.Entity<StudentTeacher>()
-				.HasNoKey();
+			modelBuilder.Entity<Lesson>()
+				.HasOne<Employee>()
+				.WithMany()
+				.HasForeignKey(s => s.TeacherId);
+
 		}
 
 		public ApplicationDbContext(DbContextOptions options) : base(options)

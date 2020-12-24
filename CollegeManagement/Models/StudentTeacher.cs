@@ -8,8 +8,9 @@ using CollegeManagement.Infra.Interfaces;
 
 namespace CollegeManagement.Api.Models
 {
-	public class StudentTeacher : ICollege
+	public class StudentTeacher : ICollege, IBase
 	{
+		public int Id { get; set; }
 		public College College { get; set; }
 		public int CollegeId { get; set; }
 

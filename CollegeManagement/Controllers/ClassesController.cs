@@ -16,24 +16,27 @@ namespace CollegeManagement.Api.Controllers
 	public class ClassesController : ControllerBase
 	{
 		private IClassService _service;
+		private IEmployeeService _employeeService;
+
 		private IMapper _mapper;
 
-		public ClassesController(IClassService service, IMapper mapper)
+		public ClassesController(IClassService service, IEmployeeService employeeService, IMapper mapper)
 		{
 			this._service = service;
+			this._employeeService = employeeService;
 			this._mapper = mapper;
 		}
 
 
 		[HttpGet]
-		public async Task<ActionResult<List<Class>>> Get()
+		public async Task<ActionResult> Get()
 		{
 			var classes = await _service.GetAll();
 			return Ok(_mapper.Map<List<ClassDto>>(classes));
 		}
 
 		[HttpGet("{id}")]
-		public async Task<ActionResult<Class>> GetById(int id)
+		public async Task<ActionResult> GetById(int id)
 		{
 			var clas = await _service.GetById(id);
 
@@ -81,6 +84,26 @@ namespace CollegeManagement.Api.Controllers
 			await _service.Remove(clas);
 			return Ok(_mapper.Map<ClassDto>(clas));
 		}
+
+		[HttpGet("{id}/participants")]
+		public async Task<ActionResult> GetParticipants(int id)
+		{
+			var clas = await _service.GetById(id);
+			if (clas == null)
+				return NotFound();
+
+			var mentor = await _employeeService.GetById(clas.MentorId);
+			if (mentor == null)
+				return NotFound();
+
+			var students = await _employeeService.GetStudents(mentor.Id);
+
+			return Ok(new ClassParticipantsDto()
+			{
+				Mentor = _mapper.Map<EmployeeDto>(mentor),
+				Students = _mapper.Map<List<StudentDto>>(students)
+			});
+		} 
 
 	}
 }

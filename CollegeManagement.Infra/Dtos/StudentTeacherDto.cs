@@ -6,8 +6,9 @@ using System.Text;
 
 namespace CollegeManagement.Infra.Dtos
 {
-	public class StudentTeacherDto : ICollege
+	public class StudentTeacherDto : ICollege, IBase
 	{
+		public int Id { get; set; }
 		public CollegeDto College { get; set; }
 		public int CollegeId { get; set; }
 

@@ -18,6 +18,9 @@ namespace CollegeManagement.Api.Models
 		public Building Building{ get; set; }
 		public int BuildingId { get; set; }
 
+		//public Education Education { get; set; }
+		//public int EducationId { get; set; }
+
 		public int MentorId { get; set; }
 
 		public string Name { get; set; }

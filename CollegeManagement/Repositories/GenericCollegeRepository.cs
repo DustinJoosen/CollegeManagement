@@ -11,7 +11,7 @@ namespace CollegeManagement.Api.Repositories
 	public class GenericCollegeRepository<T> : GenericRepository<T>, IGenericCollegeRepository<T> where T :  class , ICollege
 	{
 
-		private int _collegeId;
+		public int _collegeId;
 
 		public GenericCollegeRepository(ApplicationDbContext context) : base(context)
 		{

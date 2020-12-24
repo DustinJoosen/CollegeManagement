@@ -26,14 +26,14 @@ namespace CollegeManagement.Api.Controllers
 
 
 		[HttpGet]
-		public async Task<ActionResult<List<PayCheck>>> Get()
+		public async Task<ActionResult> Get()
 		{
 			var paychecks = await _service.GetAll();
 			return Ok(_mapper.Map<List<PayCheckDto>>(paychecks));
 		}
 
 		[HttpGet("{id}")]
-		public async Task<ActionResult<PayCheck>> GetById(int id)
+		public async Task<ActionResult> GetById(int id)
 		{
 			var paycheck = await _service.GetById(id);
 

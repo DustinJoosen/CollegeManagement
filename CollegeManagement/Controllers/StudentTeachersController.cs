@@ -26,61 +26,61 @@ namespace CollegeManagement.Api.Controllers
 
 
 		[HttpGet]
-		public async Task<ActionResult<List<StudentTeacher>>> Get()
+		public async Task<ActionResult> Get()
 		{
 			var studentteachers = await _service.GetAll();
 			return Ok(_mapper.Map<List<StudentTeacherDto>>(studentteachers));
 		}
 
-		//[HttpGet("{id}")]
-		//public async Task<ActionResult<StudentTeacher>> GetById(int id)
-		//{
-		//	var studentteacher = await _service.GetById(id);
+		[HttpGet("{id}")]
+		public async Task<ActionResult<StudentTeacher>> GetById(int id)
+		{
+			var studentteacher = await _service.GetById(id);
 
-		//	if (studentteacher == null)
-		//		return NotFound();
+			if (studentteacher == null)
+				return NotFound();
 
-		//	return Ok(_mapper.Map<StudentTeacherDto>(studentteacher));
-		//}
+			return Ok(_mapper.Map<StudentTeacherDto>(studentteacher));
+		}
 
-		//[HttpPost]
-		//public async Task<ActionResult> Create(StudentTeacherDto studentteacherDto)
-		//{
-		//	if (!ModelState.IsValid)
-		//		return BadRequest();
+		[HttpPost]
+		public async Task<ActionResult> Create(StudentTeacherDto studentteacherDto)
+		{
+			if (!ModelState.IsValid)
+				return BadRequest();
 
-		//	var studentteacher = _mapper.Map<StudentTeacher>(studentteacherDto);
-		//	await _service.Create(studentteacher);
+			var studentteacher = _mapper.Map<StudentTeacher>(studentteacherDto);
+			await _service.Create(studentteacher);
 
-		//	return Ok(_mapper.Map<StudentTeacherDto>(studentteacher));
-		//}
+			return Ok(_mapper.Map<StudentTeacherDto>(studentteacher));
+		}
 
-		//[HttpPut]
-		//public async Task<ActionResult> Update(StudentTeacherDto studentteacherDto)
-		//{
-		//	if (!ModelState.IsValid)
-		//		return BadRequest();
+		[HttpPut]
+		public async Task<ActionResult> Update(StudentTeacherDto studentteacherDto)
+		{
+			if (!ModelState.IsValid)
+				return BadRequest();
 
-		//	var studentteacher = await _service.GetById(studentteacherDto.Id);
-		//	if (studentteacher == null)
-		//		return NotFound();
+			var studentteacher = await _service.GetById(studentteacherDto.Id);
+			if (studentteacher == null)
+				return NotFound();
 
-		//	_mapper.Map(studentteacherDto, studentteacher);
-		//	await _service.Update(studentteacher);
+			_mapper.Map(studentteacherDto, studentteacher);
+			await _service.Update(studentteacher);
 
-		//	return Ok(_mapper.Map<StudentTeacherDto>(studentteacher));
-		//}
+			return Ok(_mapper.Map<StudentTeacherDto>(studentteacher));
+		}
 
-		//[HttpDelete("{id}")]
-		//public async Task<ActionResult> Delete(int id)
-		//{
-		//	var studentteacher = await _service.GetById(id);
-		//	if (studentteacher == null)
-		//		return NotFound();
+		[HttpDelete("{id}")]
+		public async Task<ActionResult> Delete(int id)
+		{
+			var studentteacher = await _service.GetById(id);
+			if (studentteacher == null)
+				return NotFound();
 
-		//	await _service.Remove(studentteacher);
-		//	return Ok(_mapper.Map<StudentTeacherDto>(studentteacher));
-		//}
+			await _service.Remove(studentteacher);
+			return Ok(_mapper.Map<StudentTeacherDto>(studentteacher));
+		}
 
 	}
 }
