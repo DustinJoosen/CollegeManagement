@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace CollegeManagement.Api.Services
 {
-	public class CollegeService : Service<College>, ICollegeService
+	public class PayCheckService : ServiceCollege<PayCheck>, IPayCheckService
 	{
-		public CollegeService(ICollegeRepository repos) : base (repos)
+		public PayCheckService(IPayCheckRepository repos) : base (repos)
 		{
 
 		}
