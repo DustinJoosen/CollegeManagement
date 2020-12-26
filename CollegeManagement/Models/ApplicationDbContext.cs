@@ -32,10 +32,10 @@ namespace CollegeManagement.Api.Models
 				.WithMany()
 				.HasForeignKey(s => s.TeacherId);
 
-			modelBuilder.Entity<Lesson>()
-				.HasOne<Employee>()
-				.WithMany()
-				.HasForeignKey(s => s.TeacherId);
+			//modelBuilder.Entity<Lesson>()
+			//	.HasOne<Employee>()
+			//	.WithMany()
+			//	.HasForeignKey(s => s.TeacherId);
 
 		}
 
