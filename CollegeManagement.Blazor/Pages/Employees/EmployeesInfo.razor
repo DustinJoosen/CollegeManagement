@@ -1,0 +1,9 @@
+﻿@page "/Management/Employees/{Id:int}"
+
+<h3>EmployeesInfo</h3>
+<h5>Welcome employee @Id</h5>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+}

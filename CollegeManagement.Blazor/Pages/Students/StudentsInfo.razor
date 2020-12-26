@@ -1,0 +1,9 @@
+﻿@page "/Teaching/Students/{Id:int}" 
+
+<h3>StudentsInfo</h3>
+<h5>Welcome, Student @Id</h5>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+}
