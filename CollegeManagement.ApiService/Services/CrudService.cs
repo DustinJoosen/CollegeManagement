@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace CollegeManagement.ApiService.Services
 {
-	class CrudService<T> : ICrudService<T> where T : class, IBase
+	public class CrudService<T> : ICrudService<T> where T : class, IBase
 	{
 		private HttpClient client;
 		private readonly string url;
