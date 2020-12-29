@@ -1,4 +1,5 @@
-using CollegeManagement.Blazor.Data;
+using CollegeManagement.ApiService;
+using CollegeManagement.Blazor.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -28,7 +29,26 @@ namespace CollegeManagement.Blazor
 		{
 			services.AddRazorPages();
 			services.AddServerSideBlazor();
-			services.AddSingleton<WeatherForecastService>();
+
+			services.AddScoped<AppState>();
+
+			var apiUrls = new ApiUrls();
+			Configuration.GetSection("ApiUrls").Bind(apiUrls);
+			services.AddSingleton<ApiUrls>(apiUrls);
+
+
+			services.AddHttpClient<ApiClient>(s =>
+				s.BaseAddress = new Uri(apiUrls.CollegeManagementApi));
+				
+
+
+
+//			services.AddHttpClient<WeegRegistraties.ApiClient.ApiClient>(s =>
+//s.BaseAddress = new Uri(apiUrls.WeegregistratiesApiUrl))
+//	.AddTransientHttpErrorPolicy(builder =>
+//		builder.WaitAndRetryAsync(3, retryCount =>
+//			TimeSpan.FromSeconds(Math.Pow(2, retryCount))));
+
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

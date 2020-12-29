@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CollegeManagement.Blazor", 
 		{8C9D65E5-9F22-48A3-881D-EFEFC04603A1} = {8C9D65E5-9F22-48A3-881D-EFEFC04603A1}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CollegeManagement.ApiService", "CollegeManagement.ApiService\CollegeManagement.ApiService.csproj", "{8C9D65E5-9F22-48A3-881D-EFEFC04603A1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CollegeManagement.ApiClient", "CollegeManagement.ApiService\CollegeManagement.ApiClient.csproj", "{8C9D65E5-9F22-48A3-881D-EFEFC04603A1}"
 	ProjectSection(ProjectDependencies) = postProject
 		{7B22B81D-8B19-4A5E-8580-97F5B0158FFA} = {7B22B81D-8B19-4A5E-8580-97F5B0158FFA}
 	EndProjectSection

@@ -1,6 +1,7 @@
 ﻿@inherits LayoutComponentBase
 
 @inject NavigationManager navManager 
+@inject AppState AppState
 
 <div class="page">
     <div class="sidebar">
@@ -13,7 +14,26 @@
         </div>
 
         <div class="content px-4">
-            @Body
+            <CascadingValue Value="@AppState" Name="AppState">
+                @if (AppState.Initialized)
+                {
+                    @Body
+                }
+            </CascadingValue>
         </div>
     </div>
 </div>
+
+
+@code{
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        AppState.Initialized = true;
+        this.StateHasChanged();
+    }
+
+}

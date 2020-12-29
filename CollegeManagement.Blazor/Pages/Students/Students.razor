@@ -1,7 +1,52 @@
 ﻿@page "/Teaching/Students"
+@layout MainLayout 
 
 <h3>Students</h3>
 
-@code {
+<table class="table mt-2">
+    <tr>
+        <th>Id</th>
+        <th>CollegeId</th>
+        <th>BuildingId</th>
+        <th>ClassId</th>
+        <th>FirstName</th>
+        <th>MiddleName</th>
+        <th>LastName</th>
+        <th>DateOfBirth</th>
+        <th>Active</th>
+        <th>EmailAddress</th>
+        <th>ImageName</th>
+    </tr>
+    @foreach(var student in students)
+    {
+        <tr>
+            <td>@student.Id</td>
+            <td>@student.CollegeId</td>
+            <td>@student.BuildingId</td>
+            <td>@student.ClassId</td>
+            <td>@student.Firstname</td>
+            <td>@student.Middlename</td>
+            <td>@student.Lastname</td>
+            <td>@student.DateOfBirth.ToString()</td>
+            <td>@student.Active</td>
+            <td>@student.EmailAddress</td>
+            <td>@student.ImageName</td>
+        </tr>
+    }
+</table>
 
+@code {
+    [CascadingParameter(Name ="AppState")] protected AppState AppState { get; set; }
+
+    private List<StudentDto> students = new List<StudentDto>();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    
+    {
+        if (!firstRender)
+            return;
+
+        students = await AppState.ApiClient.StudentService.GetAll();
+        this.StateHasChanged();
+    }
 }

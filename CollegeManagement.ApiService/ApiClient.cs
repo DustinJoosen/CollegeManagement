@@ -4,7 +4,7 @@ using System.Net.Http;
 
 namespace CollegeManagement.ApiService
 {
-	public class ApiService : IDisposable
+	public class ApiClient : IDisposable
 	{
 		public HttpClient HttpClient { get; }
 
@@ -16,7 +16,7 @@ namespace CollegeManagement.ApiService
 		public IStudentsService StudentService { get; set; }
 		public IStudentTeachersService StudentTeacherService { get; set; }
 
-		public ApiService(HttpClient client)
+		public ApiClient(HttpClient client)
 		{
 			this.HttpClient = client;
 
