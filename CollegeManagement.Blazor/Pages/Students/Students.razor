@@ -1,52 +1,172 @@
 ﻿@page "/Teaching/Students"
-@layout MainLayout 
+@layout MainLayout
+
+@inject NavigationManager uriHelper
+
+@{
+    string neworedit = localstudent.Id == 0 ? "new" : "edit";
+}
 
 <h3>Students</h3>
 
-<table class="table mt-2">
-    <tr>
-        <th>Id</th>
-        <th>CollegeId</th>
-        <th>BuildingId</th>
-        <th>ClassId</th>
-        <th>FirstName</th>
-        <th>MiddleName</th>
-        <th>LastName</th>
-        <th>DateOfBirth</th>
-        <th>Active</th>
-        <th>EmailAddress</th>
-        <th>ImageName</th>
-    </tr>
-    @foreach(var student in students)
-    {
+@if (students == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+
+    <button class="btn btn-primary" @onclick="New">New</button>
+    <button class="btn btn-primary" @onclick="Refresh">Refresh</button>
+
+    <MatCheckbox cla ss="float-left" @bind-Value="@ShowActive" Label="Only show active students"></MatCheckbox>
+
+    <table class="table mt-2">
         <tr>
-            <td>@student.Id</td>
-            <td>@student.CollegeId</td>
-            <td>@student.BuildingId</td>
-            <td>@student.ClassId</td>
-            <td>@student.Firstname</td>
-            <td>@student.Middlename</td>
-            <td>@student.Lastname</td>
-            <td>@student.DateOfBirth.ToString()</td>
-            <td>@student.Active</td>
-            <td>@student.EmailAddress</td>
-            <td>@student.ImageName</td>
+            <th>BuildingId</th>
+            <th>ClassId</th>
+            <th>FirstName</th>
+            <th>MiddleName</th>
+            <th>LastName</th>
+            <th>ImageName</th>
+            <th>Actions</th>
         </tr>
-    }
-</table>
+        @foreach (var student in students)
+        {
+            <tr>
+                <td>@student.BuildingId</td>
+                <td>@student.ClassId</td>
+                <td>@student.Firstname</td>
+                <td>@student.Middlename</td>
+                <td>@student.Lastname</td>
+                <td>@student.ImageName</td>
+                <td>
+                    <button class="btn btn-primary mr-2" @onclick="@(() => Info(@student))">Info</button>
+                    <button class="btn btn-primary mr-2" @onclick="@(() => Edit(@student))">Edit</button>
+                    <button class="btn btn-danger mr-2" @onclick="@(() => Delete(@student))">Delete</button>
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+
+<MatThemeProvider>
+    <MatDialog @bind-IsOpen="editformopen">
+        <MatDialogTitle class="text-center">
+            <h5> @neworedit Student </h5>
+            <MatCheckbox @bind-Value="@localstudent.Active"></MatCheckbox>
+        </MatDialogTitle>
+        <MatDialogContent class="mb-1">
+            <p> <MatTextField class="form-control" @bind-Value="@localstudent.BuildingId" Label="Building Id"></MatTextField> </p>
+            <p> <MatTextField class="form-control" @bind-Value="@localstudent.ClassId" Label="Class Id"></MatTextField> </p>
+            <p> <MatTextField class="form-control" @bind-Value="@localstudent.Firstname" Label="First Name"></MatTextField> </p>
+            <p> <MatTextField class="form-control" @bind-Value="@localstudent.Middlename" Label="Middle Name"></MatTextField> </p>
+            <p> <MatTextField class="form-control" @bind-Value="@localstudent.Lastname" Label="Last Name"></MatTextField> </p>
+            <p> <MatDatePicker class="form-control" @bind-Value="localstudent.DateOfBirth" Label="Date of birth"></MatDatePicker> </p>
+            <p> <MatTextField class="form-control" @bind-Value="@localstudent.EmailAddress" Label="emailaddress" Type="email"></MatTextField> </p>
+        </MatDialogContent>
+        <MatDialogActions>
+            <button class="btn btn-outline-danger mr-2 mt-2" @onclick="Cancel">Cancel</button>
+            <button class="btn btn-primary mr-2 mt-2" @onclick="Save">Save</button>
+        </MatDialogActions>
+    </MatDialog>
+</MatThemeProvider>
+
+<MatThemeProvider>
+    <MatDialog @bind-IsOpen="deleteformopen">
+        <MatDialogTitle class="text-center">
+            <h5> Delete @localstudent.Lastname </h5>
+        </MatDialogTitle>
+        <MatDialogContent class="mb-1">
+            <p class="text-center text-danger"> Are you sure you want to delete @localstudent.Lastname ?</p>
+        </MatDialogContent>
+        <MatDialogActions>
+            <button class="btn btn-outline-primary mr-2 mt-2" @onclick="Cancel">Cancel</button>
+            <button class="btn btn-danger mr-2 mt-2" @onclick="DeleteOk">Delete</button>
+        </MatDialogActions>
+    </MatDialog>
+</MatThemeProvider>
 
 @code {
-    [CascadingParameter(Name ="AppState")] protected AppState AppState { get; set; }
+    [CascadingParameter(Name = "AppState")] protected AppState AppState { get; set; }
 
     private List<StudentDto> students = new List<StudentDto>();
+    private StudentDto localstudent = new StudentDto();
+
+    private bool ShowActive = true;
+
+    private bool editformopen = false;
+    private bool deleteformopen = false;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
-    
     {
         if (!firstRender)
             return;
 
+        await Refresh();
+    }
+
+    private async Task Refresh()
+    {
         students = await AppState.ApiClient.StudentService.GetAll();
-        this.StateHasChanged();
+
+        if (!ShowActive)
+            students = students.Where(s => s.Active == true).ToList();
+
+        StateHasChanged();
+    }
+
+    private async Task New()
+    {
+        localstudent = new StudentDto();
+        editformopen = true;
+    }
+
+    private async Task Edit(StudentDto student)
+    {
+        localstudent = student;
+        editformopen = true;
+    }
+
+    private async Task Info(StudentDto student)
+    {
+        uriHelper.NavigateTo($"/Teaching/Students/{student.Id}");
+    }
+
+    private async Task Delete(StudentDto student)
+    {
+        localstudent = student;
+        deleteformopen = true;
+    }
+
+    private async Task Save()
+    {
+        if (localstudent.Id == 0)
+        {
+            await AppState.ApiClient.StudentService.Create(localstudent);
+        }
+        else
+        {
+            await AppState.ApiClient.StudentService.Update(localstudent);
+        }
+
+        Cancel();
+        await Refresh();
+    }
+
+    private async Task DeleteOk()
+    {
+        if (localstudent != null)
+            await AppState.ApiClient.StudentService.Remove(localstudent);
+
+        Cancel();
+        await Refresh();
+    }
+
+    private void Cancel()
+    {
+        editformopen = false;
+        deleteformopen = false;
     }
 }

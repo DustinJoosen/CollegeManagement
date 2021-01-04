@@ -1,9 +1,34 @@
-﻿@page "/Teaching/Students/{Id:int}" 
+﻿@page "/Teaching/Students/{Id:int}"
 
 <h3>StudentsInfo</h3>
 <h5>Welcome, Student @Id</h5>
 
+@if (student != null)
+{
+    <p>BuildingId: @student.Firstname</p>
+    <p>ClassId: @student.ClassId</p>
+    <p>FirstName: @student.Firstname</p>
+    <p>MiddleName: @student.Middlename</p>
+    <p>LastName: @student.Lastname</p>
+    <p>Date of birth: @student.DateOfBirth.ToShortDateString()</p>
+    <p>EmailAddress: @student.EmailAddress</p>
+    <p>Active: @student.Active</p>
+    <p>ImageName: @student.ImageName</p>
+
+}
+
+
 @code {
+    [CascadingParameter(Name = "AppState")] protected AppState AppState { get; set; }
+
     [Parameter]
     public int Id { get; set; }
+
+    private StudentDto student { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        student = await AppState.ApiClient.StudentService.GetById(Id);
+        await base.OnInitializedAsync();
+    }
 }
