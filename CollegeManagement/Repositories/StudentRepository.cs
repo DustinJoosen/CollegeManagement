@@ -1,4 +1,5 @@
 ﻿using CollegeManagement.Api.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,14 @@ namespace CollegeManagement.Api.Repositories
 		public StudentRepository(ApplicationDbContext context) : base(context)
 		{
 
+		}
+
+		public override async Task<Student> GetById(int id)
+		{
+			return await this._entity
+				.Where(s => s.CollegeId == _collegeId)
+				.Include(s => s.Group)
+				.SingleOrDefaultAsync(s => s.Id == id);
 		}
 	}
 }

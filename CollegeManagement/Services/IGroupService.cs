@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CollegeManagement.Api.Repositories
+namespace CollegeManagement.Api.Services
 {
-	public interface IClassRepository : IGenericCollegeRepository<Class>
+	public interface IGroupService : IServiceCollege<Group>
 	{
 	}
 }

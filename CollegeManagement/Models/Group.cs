@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CollegeManagement.Api.Models
 {
-	public class Class : ICollege, IBase
+	public class Group : ICollege, IBase
 	{
 		public int Id { get; set; }
 

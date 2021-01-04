@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CollegeManagement.Infra.Dtos
 {
-	public class ClassDto : IBase, ICollege
+	public class GroupDto : IBase, ICollege
 	{
 		public int Id { get; set; }
 

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace CollegeManagement.Api.Repositories
 {
-	public class ClassRepository : GenericCollegeRepository<Class>, IClassRepository
+	public class GroupRepository : GenericCollegeRepository<Group>, IGroupRepository
 	{
-		public ClassRepository(ApplicationDbContext context) : base(context)
+		public GroupRepository(ApplicationDbContext context) : base(context)
 		{
 
 		}

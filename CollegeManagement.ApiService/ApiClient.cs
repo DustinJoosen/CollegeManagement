@@ -10,7 +10,7 @@ namespace CollegeManagement.ApiService
 
 		public IBuildingsService BuildingService { get; set; }
 		public ICollegesService CollegeService { get; set; }
-		public IClassesService ClassService { get; set; }
+		public IClassesService GroupService { get; set; }
 		public IEmployeesService EmployeeService { get; set; }
 		public IPayChecksService PayCheckService { get; set; }
 		public IStudentsService StudentService { get; set; }
@@ -25,7 +25,7 @@ namespace CollegeManagement.ApiService
 
 			this.BuildingService = new BuildingsService(client);
 			this.CollegeService = new CollegesService(client);
-			this.ClassService = new ClassesService(client);
+			this.GroupService = new GroupsService(client);
 			this.EmployeeService = new EmployeesService(client);
 			this.PayCheckService = new PayChecksService(client);
 			this.StudentService = new StudentsService(client);

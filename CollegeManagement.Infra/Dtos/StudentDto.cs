@@ -15,8 +15,8 @@ namespace CollegeManagement.Infra.Dtos
 		public BuildingDto Building { get; set; }
 		public int BuildingId { get; set; }
 
-		public ClassDto Class { get; set; }
-		public int ClassId { get; set; }
+		public GroupDto Group { get; set; }
+		public int GroupId { get; set; }
 
 		public string Firstname { get; set; }
 		public string Middlename { get; set; }

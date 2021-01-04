@@ -16,8 +16,8 @@ namespace CollegeManagement.Api.Models
 		public Building Building { get; set; }
 		public int BuildingId { get; set; }
 
-		public Class Class { get; set; }
-		public int ClassId { get; set; }
+		public Group Group { get; set; }
+		public int GroupId { get; set; }
 
 		public string Firstname { get; set; }
 		public string Middlename { get; set; }

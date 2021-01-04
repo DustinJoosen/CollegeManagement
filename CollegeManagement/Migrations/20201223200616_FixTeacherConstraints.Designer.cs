@@ -50,7 +50,7 @@ namespace CollegeManagement.Api.Migrations
                     b.ToTable("Buildings");
                 });
 
-            modelBuilder.Entity("CollegeManagement.Api.Models.Class", b =>
+            modelBuilder.Entity("CollegeManagement.Api.Models.Group", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -263,7 +263,7 @@ namespace CollegeManagement.Api.Migrations
                     b.Navigation("College");
                 });
 
-            modelBuilder.Entity("CollegeManagement.Api.Models.Class", b =>
+            modelBuilder.Entity("CollegeManagement.Api.Models.Group", b =>
                 {
                     b.HasOne("CollegeManagement.Api.Models.Building", "Building")
                         .WithMany()
@@ -334,7 +334,7 @@ namespace CollegeManagement.Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CollegeManagement.Api.Models.Class", "Class")
+                    b.HasOne("CollegeManagement.Api.Models.Group", "Group")
                         .WithMany()
                         .HasForeignKey("ClassId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -348,7 +348,7 @@ namespace CollegeManagement.Api.Migrations
 
                     b.Navigation("Building");
 
-                    b.Navigation("Class");
+                    b.Navigation("Group");
 
                     b.Navigation("College");
                 });

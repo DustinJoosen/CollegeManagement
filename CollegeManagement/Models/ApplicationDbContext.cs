@@ -10,7 +10,7 @@ namespace CollegeManagement.Api.Models
 	{
 		public DbSet<College> Colleges { get; set; }
 		public DbSet<Building> Buildings { get; set; }
-		public DbSet<Class> Classes { get; set; }
+		public DbSet<Group> Groups { get; set; }
 		public DbSet<Employee> Employees { get; set; }
 		public DbSet<PayCheck> PayChecks { get; set; }
 		public DbSet<Student> Students { get; set; }
@@ -22,7 +22,7 @@ namespace CollegeManagement.Api.Models
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-			modelBuilder.Entity<Class>()
+			modelBuilder.Entity<Group>()
 				.HasOne<Employee>()
 				.WithMany()
 				.HasForeignKey(s => s.MentorId);

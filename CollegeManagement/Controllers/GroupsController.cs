@@ -13,14 +13,14 @@ namespace CollegeManagement.Api.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class ClassesController : ControllerBase
+	public class GroupsController : ControllerBase
 	{
-		private IClassService _service;
+		private IGroupService _service;
 		private IEmployeeService _employeeService;
 
 		private IMapper _mapper;
 
-		public ClassesController(IClassService service, IEmployeeService employeeService, IMapper mapper)
+		public GroupsController(IGroupService service, IEmployeeService employeeService, IMapper mapper)
 		{
 			this._service = service;
 			this._employeeService = employeeService;
@@ -31,68 +31,68 @@ namespace CollegeManagement.Api.Controllers
 		[HttpGet]
 		public async Task<ActionResult> Get()
 		{
-			var classes = await _service.GetAll();
-			return Ok(_mapper.Map<List<ClassDto>>(classes));
+			var groups = await _service.GetAll();
+			return Ok(_mapper.Map<List<GroupDto>>(groups));
 		}
 
 		[HttpGet("{id}")]
 		public async Task<ActionResult> GetById(int id)
 		{
-			var clas = await _service.GetById(id);
+			var group = await _service.GetById(id);
 
-			if (clas == null)
+			if (group == null)
 				return NotFound();
 
-			return Ok(_mapper.Map<ClassDto>(clas));
+			return Ok(_mapper.Map<GroupDto>(group));
 		}
 
 		[HttpPost]
-		public async Task<ActionResult> Create(ClassDto classDto)
+		public async Task<ActionResult> Create(GroupDto groupDto)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest();
 
-			var clas = _mapper.Map<Class>(classDto);
-			await _service.Create(clas);
+			var group = _mapper.Map<Group>(groupDto);
+			await _service.Create(group);
 
-			return Ok(_mapper.Map<ClassDto>(clas));
+			return Ok(_mapper.Map<GroupDto>(group));
 		}
 
 		[HttpPut]
-		public async Task<ActionResult> Update(ClassDto classDto)
+		public async Task<ActionResult> Update(GroupDto groupDto)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest();
 
-			var clas = await _service.GetById(classDto.Id);
-			if (clas == null)
+			var group = await _service.GetById(groupDto.Id);
+			if (group == null)
 				return NotFound();
 
-			_mapper.Map(classDto, clas);
-			await _service.Update(clas);
+			_mapper.Map(groupDto, group);
+			await _service.Update(group);
 
-			return Ok(_mapper.Map<ClassDto>(clas));
+			return Ok(_mapper.Map<GroupDto>(group));
 		}
 
 		[HttpDelete("{id}")]
 		public async Task<ActionResult> Delete(int id)
 		{
-			var clas = await _service.GetById(id);
-			if (clas == null)
+			var group = await _service.GetById(id);
+			if (group == null)
 				return NotFound();
 
-			await _service.Remove(clas);
-			return Ok(_mapper.Map<ClassDto>(clas));
+			await _service.Remove(group);
+			return Ok(_mapper.Map<GroupDto>(group));
 		}
 
 		[HttpGet("{id}/participants")]
 		public async Task<ActionResult> GetParticipants(int id)
 		{
-			var clas = await _service.GetById(id);
-			if (clas == null)
+			var group = await _service.GetById(id);
+			if (group == null)
 				return NotFound();
 
-			var mentor = await _employeeService.GetById(clas.MentorId);
+			var mentor = await _employeeService.GetById(group.MentorId);
 			if (mentor == null)
 				return NotFound();
 

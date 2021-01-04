@@ -48,39 +48,6 @@ namespace CollegeManagement.Api.Migrations
                     b.ToTable("Buildings");
                 });
 
-            modelBuilder.Entity("CollegeManagement.Api.Models.Class", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<int>("BuildingId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CollegeId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DateStarted")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("MentorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BuildingId");
-
-                    b.HasIndex("CollegeId");
-
-                    b.HasIndex("MentorId");
-
-                    b.ToTable("Classes");
-                });
-
             modelBuilder.Entity("CollegeManagement.Api.Models.College", b =>
                 {
                     b.Property<int>("Id")
@@ -148,6 +115,39 @@ namespace CollegeManagement.Api.Migrations
                     b.ToTable("Employees");
                 });
 
+            modelBuilder.Entity("CollegeManagement.Api.Models.Group", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("BuildingId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CollegeId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateStarted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MentorId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BuildingId");
+
+                    b.HasIndex("CollegeId");
+
+                    b.HasIndex("MentorId");
+
+                    b.ToTable("Groups");
+                });
+
             modelBuilder.Entity("CollegeManagement.Api.Models.PayCheck", b =>
                 {
                     b.Property<int>("Id")
@@ -192,9 +192,6 @@ namespace CollegeManagement.Api.Migrations
                     b.Property<int>("BuildingId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ClassId")
-                        .HasColumnType("int");
-
                     b.Property<int>("CollegeId")
                         .HasColumnType("int");
 
@@ -206,6 +203,9 @@ namespace CollegeManagement.Api.Migrations
 
                     b.Property<string>("Firstname")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("GroupId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ImageName")
                         .HasColumnType("nvarchar(max)");
@@ -220,9 +220,9 @@ namespace CollegeManagement.Api.Migrations
 
                     b.HasIndex("BuildingId");
 
-                    b.HasIndex("ClassId");
-
                     b.HasIndex("CollegeId");
+
+                    b.HasIndex("GroupId");
 
                     b.ToTable("Students");
                 });
@@ -268,7 +268,26 @@ namespace CollegeManagement.Api.Migrations
                     b.Navigation("College");
                 });
 
-            modelBuilder.Entity("CollegeManagement.Api.Models.Class", b =>
+            modelBuilder.Entity("CollegeManagement.Api.Models.Employee", b =>
+                {
+                    b.HasOne("CollegeManagement.Api.Models.Building", "Building")
+                        .WithMany()
+                        .HasForeignKey("BuildingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CollegeManagement.Api.Models.College", "College")
+                        .WithMany()
+                        .HasForeignKey("CollegeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Building");
+
+                    b.Navigation("College");
+                });
+
+            modelBuilder.Entity("CollegeManagement.Api.Models.Group", b =>
                 {
                     b.HasOne("CollegeManagement.Api.Models.Building", "Building")
                         .WithMany()
@@ -285,25 +304,6 @@ namespace CollegeManagement.Api.Migrations
                     b.HasOne("CollegeManagement.Api.Models.Employee", null)
                         .WithMany()
                         .HasForeignKey("MentorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Building");
-
-                    b.Navigation("College");
-                });
-
-            modelBuilder.Entity("CollegeManagement.Api.Models.Employee", b =>
-                {
-                    b.HasOne("CollegeManagement.Api.Models.Building", "Building")
-                        .WithMany()
-                        .HasForeignKey("BuildingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CollegeManagement.Api.Models.College", "College")
-                        .WithMany()
-                        .HasForeignKey("CollegeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -339,23 +339,23 @@ namespace CollegeManagement.Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CollegeManagement.Api.Models.Class", "Class")
-                        .WithMany()
-                        .HasForeignKey("ClassId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("CollegeManagement.Api.Models.College", "College")
                         .WithMany()
                         .HasForeignKey("CollegeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CollegeManagement.Api.Models.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Building");
 
-                    b.Navigation("Class");
-
                     b.Navigation("College");
+
+                    b.Navigation("Group");
                 });
 
             modelBuilder.Entity("CollegeManagement.Api.Models.StudentTeacher", b =>

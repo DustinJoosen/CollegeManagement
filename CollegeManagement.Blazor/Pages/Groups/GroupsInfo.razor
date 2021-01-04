@@ -1,0 +1,56 @@
+﻿@page "/Teaching/Groups/{Id:int}"
+
+@layout MainLayout
+
+
+<h3>Group Info</h3>
+<h5>Welcome Group @Id</h5>
+
+@if (group != null)
+{
+    <p>BuildingId: @group.BuildingId</p>
+    <p>DateStarted: @group.DateStarted</p>
+    <p>Name: @group.Name</p>
+    <p>MentorId: @group.MentorId</p>
+
+    <h2>Class participants:</h2>
+
+    <table class="table">
+        <tr>
+            <th>Participant Name</th>
+            <th>Participant Type</th>
+        </tr>
+        <tr>
+            <td>@participants.Mentor.Firstname</td>
+            <td>Mentor</td>
+        </tr>
+        @foreach(var participant in participants.Students)
+        {
+            <tr>
+                <td><a href="/Teaching/Students/@participant.Id">@participant.Firstname</a></td>
+                <td>Student</td>
+            </tr>
+        }
+    </table>
+
+}
+
+<p>(here will be a list of all participants)</p>
+
+@code {
+    [CascadingParameter(Name = "AppState")] protected AppState AppState { get; set; }
+
+    [Parameter]
+    public int Id { get; set; }
+
+    private ClassParticipantsDto participants { get; set; }
+    private GroupDto group { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        group = await AppState.ApiClient.GroupService.GetById(Id);
+        participants = await AppState.ApiClient.GroupService.GetParticipants(Id);
+
+        await base.OnInitializedAsync();
+    }
+}

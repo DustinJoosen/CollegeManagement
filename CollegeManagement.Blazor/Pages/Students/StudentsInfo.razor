@@ -6,7 +6,7 @@
 @if (student != null)
 {
     <p>BuildingId: @student.Firstname</p>
-    <p>ClassId: @student.ClassId</p>
+    <p>Group: <a href="/Teaching/Groups/@student.GroupId">@student.Group.Name</a></p>
     <p>FirstName: @student.Firstname</p>
     <p>MiddleName: @student.Middlename</p>
     <p>LastName: @student.Lastname</p>

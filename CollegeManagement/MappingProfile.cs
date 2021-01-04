@@ -18,8 +18,8 @@ namespace CollegeManagement.Api
 			CreateMap<Building, BuildingDto>();
 			CreateMap<BuildingDto, Building>();
 
-			CreateMap<Class, ClassDto>();
-			CreateMap<ClassDto, Class>();
+			CreateMap<Group, GroupDto>();
+			CreateMap<GroupDto, Group>();
 
 			CreateMap<Employee, EmployeeDto>();
 			CreateMap<EmployeeDto, Employee>();

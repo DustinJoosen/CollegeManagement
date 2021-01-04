@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace CollegeManagement.Api.Services
 {
-	public class ClassService : ServiceCollege<Class>, IClassService
+	public class GroupService : ServiceCollege<Group>, IGroupService
 	{
-		public ClassService(IClassRepository repos) : base (repos)
+		public GroupService(IGroupRepository repos) : base (repos)
 		{
 
 		}

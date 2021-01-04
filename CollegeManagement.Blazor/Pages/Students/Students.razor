@@ -24,7 +24,7 @@ else
     <table class="table mt-2">
         <tr>
             <th>BuildingId</th>
-            <th>ClassId</th>
+            <th>GroupId</th>
             <th>FirstName</th>
             <th>MiddleName</th>
             <th>LastName</th>
@@ -35,7 +35,7 @@ else
         {
             <tr>
                 <td>@student.BuildingId</td>
-                <td>@student.ClassId</td>
+                <td>@groups.SingleOrDefault(s => s.Id == @student.GroupId).Name </td>
                 <td>@student.Firstname</td>
                 <td>@student.Middlename</td>
                 <td>@student.Lastname</td>
@@ -59,7 +59,7 @@ else
         </MatDialogTitle>
         <MatDialogContent class="mb-1">
             <p> <MatTextField class="form-control" @bind-Value="@localstudent.BuildingId" Label="Building Id"></MatTextField> </p>
-            <p> <MatTextField class="form-control" @bind-Value="@localstudent.ClassId" Label="Class Id"></MatTextField> </p>
+            <p> <MatTextField class="form-control" @bind-Value="@localstudent.GroupId" Label="Group Id"></MatTextField> </p>
             <p> <MatTextField class="form-control" @bind-Value="@localstudent.Firstname" Label="First Name"></MatTextField> </p>
             <p> <MatTextField class="form-control" @bind-Value="@localstudent.Middlename" Label="Middle Name"></MatTextField> </p>
             <p> <MatTextField class="form-control" @bind-Value="@localstudent.Lastname" Label="Last Name"></MatTextField> </p>
@@ -92,6 +92,7 @@ else
     [CascadingParameter(Name = "AppState")] protected AppState AppState { get; set; }
 
     private List<StudentDto> students = new List<StudentDto>();
+    private List<GroupDto> groups = new List<GroupDto>();
     private StudentDto localstudent = new StudentDto();
 
     private bool ShowActive = true;
@@ -110,6 +111,7 @@ else
     private async Task Refresh()
     {
         students = await AppState.ApiClient.StudentService.GetAll();
+        groups = await AppState.ApiClient.GroupService.GetAll();
 
         if (!ShowActive)
             students = students.Where(s => s.Active == true).ToList();

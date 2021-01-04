@@ -1,0 +1,155 @@
+﻿@page "/Teaching/Groups"
+@layout MainLayout
+
+@inject NavigationManager uriHelper
+
+@{
+    string neworedit = localgroup.Id == 0 ? "new" : "edit";
+}
+
+<h3>Groups</h3>
+
+@if (groups == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <button class="btn btn-primary" @onclick="New">New</button>
+    <button class="btn btn-primary" @onclick="Refresh">Refresh</button>
+
+    <table class="table mt-2">
+        <tr>
+            <th>BuildingId</th>
+            <th>DateStarted</th>
+            <th>MentorId</th>
+            <th>Name</th>
+        </tr>
+        @foreach (var group in groups)
+        {
+            <tr>
+                <td>@group.BuildingId</td>
+                <td>@group.DateStarted</td>
+                <td>@group.MentorId</td>
+                <td>@group.Name</td>
+                <td>
+                    <button class="btn btn-primary mr-2" @onclick="@(() => Info(group))">Info</button>
+                    <button class="btn btn-primary mr-2" @onclick="@(() => Edit(group))">Edit</button>
+                    <button class="btn btn-danger mr-2" @onclick="@(() => Delete(group))">Delete</button>
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+
+<MatThemeProvider>
+    <MatDialog @bind-IsOpen="editformopen">
+        <MatDialogTitle class="text-center">
+            <h5> @neworedit Group </h5>
+        </MatDialogTitle>
+        <MatDialogContent class="mb-1">
+            <p> <MatTextField class="form-control" @bind-Value="@localgroup.BuildingId" Label="Building Id"></MatTextField> </p>
+            <p> <MatTextField class="form-control" @bind-Value="@localgroup.Name" Label="Class Name"></MatTextField> </p>
+            <p> <MatTextField class="form-control" @bind-Value="@localgroup.MentorId" Label="Mentor Id"></MatTextField> </p>
+            <p> <MatDatePicker class="form-control" @bind-Value="localgroup.DateStarted" Label="Date started"></MatDatePicker> </p>
+        </MatDialogContent>
+        <MatDialogActions>
+            <button class="btn btn-outline-danger mr-2 mt-2" @onclick="Cancel">Cancel</button>
+            <button class="btn btn-primary mr-2 mt-2" @onclick="Save">Save</button>
+        </MatDialogActions>
+    </MatDialog>
+</MatThemeProvider>
+
+<MatThemeProvider>
+    <MatDialog @bind-IsOpen="deleteformopen">
+        <MatDialogTitle class="text-center">
+            <h5> Delete @localgroup.Name</h5>
+        </MatDialogTitle>
+        <MatDialogContent class="mb-1">
+            <p class="text-center text-danger"> Are you sure you want to delete group @localgroup.Name?</p>
+        </MatDialogContent>
+        <MatDialogActions>
+            <button class="btn btn-outline-primary mr-2 mt-2" @onclick="Cancel">Cancel</button>
+            <button class="btn btn-danger mr-2 mt-2" @onclick="DeleteOk">Delete</button>
+        </MatDialogActions>
+    </MatDialog>
+</MatThemeProvider>
+
+@code {
+    [CascadingParameter(Name = "AppState")] protected AppState AppState { get; set; }
+
+    private List<GroupDto> groups = new List<GroupDto>();
+    private GroupDto localgroup = new GroupDto();
+
+    private bool editformopen = false;
+    private bool deleteformopen = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        await Refresh();
+    }
+
+    private async Task Refresh()
+    {
+        groups = await AppState.ApiClient.GroupService.GetAll();
+
+        StateHasChanged();
+    }
+
+    private async Task New()
+    {
+        localgroup = new GroupDto();
+        editformopen = true;
+    }
+
+    private async Task Edit(GroupDto clas)
+    {
+        localgroup = clas;
+        editformopen = true;
+    }
+
+    private async Task Info(GroupDto clas)
+    {
+        uriHelper.NavigateTo($"/Teaching/Groups/{clas.Id}");
+    }
+
+    private async Task Delete(GroupDto clas)
+    {
+        localgroup = clas;
+        deleteformopen = true;
+    }
+
+    private async Task Save()
+    {
+        if (localgroup.Id == 0)
+        {
+            await AppState.ApiClient.GroupService.Create(localgroup);
+        }
+        else
+        {
+            await AppState.ApiClient.GroupService.Update(localgroup);
+        }
+
+        Cancel();
+        await Refresh();
+    }
+
+    private async Task DeleteOk()
+    {
+        if (localgroup != null)
+            await AppState.ApiClient.GroupService.Remove(localgroup);
+
+        Cancel();
+        await Refresh();
+    }
+
+    private void Cancel()
+    {
+        editformopen = false;
+        deleteformopen = false;
+    }
+}

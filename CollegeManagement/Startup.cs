@@ -37,8 +37,8 @@ namespace CollegeManagement.Api
 
 			services.AddScoped<IBuildingService, BuildingService>();
 			services.AddScoped<IBuildingRepository, BuildingRepository>();
-			services.AddScoped<IClassService, ClassService>();
-			services.AddScoped<IClassRepository, ClassRepository>();
+			services.AddScoped<IGroupService, GroupService>();
+			services.AddScoped<IGroupRepository, GroupRepository>();
 			services.AddScoped<ICollegeService, CollegeService>();
 			services.AddScoped<ICollegeRepository, CollegeRepository>();
 			services.AddScoped<IEmployeeService, EmployeeService>();
