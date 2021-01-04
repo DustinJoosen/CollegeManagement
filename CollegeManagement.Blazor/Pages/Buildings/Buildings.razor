@@ -1,7 +1,149 @@
-﻿@page "/Management/Buildings" 
+﻿@page "/Management/Buildings"
+@layout MainLayout
+
+
+@{
+    string neworedit = localbuilding.Id == 0 ? "new" : "edit";
+}
 
 <h3>Buildings</h3>
 
-@code {
+@if (buildings == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
 
+    <button class="btn btn-primary" @onclick="New">New</button>
+    <button class="btn btn-primary" @onclick="Refresh">Refresh</button>
+
+    <table class="table mt-2">
+        <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>ZipCode</th>
+            <th>Info</th>
+            <th>Actions</th>
+        </tr>
+        @foreach (var building in buildings)
+        {
+            <tr>
+                <td>@building.Name</td>
+                <td>@building.Address</td>
+                <td>@building.ZipCode</td>
+                <td>@building.Info</td>
+                <td>
+                    <button class="btn btn-primary mr-2" @onclick="@(() => Edit(@building))">Edit</button>
+                    <button class="btn btn-danger mr-2" @onclick="@(() => Delete(@building))">Delete</button>
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+
+<MatThemeProvider>
+    <MatDialog @bind-IsOpen="editformopen">
+        <MatDialogTitle class="text-center">
+            <h5> @neworedit Building </h5>
+        </MatDialogTitle>
+        <MatDialogContent class="mb-1">
+            <p> <MatTextField class="form-control" @bind-Value="@localbuilding.Name" Label="Name"></MatTextField> </p>
+            <p> <MatTextField class="form-control" @bind-Value="@localbuilding.Address" Label="Address"></MatTextField> </p>
+            <p> <MatTextField class="form-control" @bind-Value="@localbuilding.ZipCode" Label="Zipcode"></MatTextField> </p>
+            <p> <MatTextField TextArea="true" class="form-control" @bind-Value="localbuilding.Info" Label="Info"></MatTextField> </p>
+        </MatDialogContent>
+        <MatDialogActions>
+            <button class="btn btn-outline-danger mr-2 mt-2" @onclick="Cancel">Cancel</button>
+            <button class="btn btn-primary mr-2 mt-2" @onclick="Save">Save</button>
+        </MatDialogActions>
+    </MatDialog>
+</MatThemeProvider>
+
+<MatThemeProvider>
+    <MatDialog @bind-IsOpen="deleteformopen">
+        <MatDialogTitle class="text-center">
+            <h5> Delete @localbuilding.Name </h5>
+        </MatDialogTitle>
+        <MatDialogContent class="mb-1">
+            <p class="text-center text-danger"> Are you sure you want to delete @localbuilding.Name ?</p>
+        </MatDialogContent>
+        <MatDialogActions>
+            <button class="btn btn-outline-primary mr-2 mt-2" @onclick="Cancel">Cancel</button>
+            <button class="btn btn-danger mr-2 mt-2" @onclick="DeleteOk">Delete</button>
+        </MatDialogActions>
+    </MatDialog>
+</MatThemeProvider>
+
+@code {
+    [CascadingParameter(Name = "AppState")] protected AppState AppState { get; set; }
+
+    private List<BuildingDto> buildings = new List<BuildingDto>();
+    private BuildingDto localbuilding = new BuildingDto();
+
+    private bool editformopen = false;
+    private bool deleteformopen = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        await Refresh();
+    }
+
+    private async Task Refresh()
+    {
+        buildings = await AppState.ApiClient.BuildingService.GetAll();
+        StateHasChanged();
+    }
+
+    private async Task New()
+    {
+        localbuilding = new BuildingDto();
+        editformopen = true;
+    }
+
+    private async Task Edit(BuildingDto building)
+    {
+        localbuilding = building;
+        editformopen = true;
+    }
+
+    private async Task Delete(BuildingDto building)
+    {
+        localbuilding = building;
+        deleteformopen = true;
+    }
+
+    private async Task Save()
+    {
+        if (localbuilding.Id == 0)
+        {
+            await AppState.ApiClient.BuildingService.Create(localbuilding);
+        }
+        else
+        {
+            await AppState.ApiClient.BuildingService.Update(localbuilding);
+        }
+
+        Cancel();
+        await Refresh();
+    }
+
+    private async Task DeleteOk()
+    {
+        if (localbuilding != null)
+            await AppState.ApiClient.BuildingService.Remove(localbuilding);
+
+        Cancel();
+        await Refresh();
+    }
+
+    private void Cancel()
+    {
+        editformopen = false;
+        deleteformopen = false;
+    }
 }

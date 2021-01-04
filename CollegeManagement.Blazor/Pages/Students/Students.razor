@@ -23,8 +23,8 @@ else
 
     <table class="table mt-2">
         <tr>
-            <th>BuildingId</th>
-            <th>GroupId</th>
+            <th>Building</th>
+            <th>Group</th>
             <th>FirstName</th>
             <th>MiddleName</th>
             <th>LastName</th>
@@ -34,8 +34,8 @@ else
         @foreach (var student in students)
         {
             <tr>
-                <td>@student.BuildingId</td>
-                <td>@groups.SingleOrDefault(s => s.Id == @student.GroupId).Name </td>
+                <td>@buildings.SingleOrDefault(s => s.Id == student.BuildingId).Name</td>
+                <td><a href="/Teaching/Groups/@student.GroupId">@groups.SingleOrDefault(s => s.Id == @student.GroupId).Name </a></td>
                 <td>@student.Firstname</td>
                 <td>@student.Middlename</td>
                 <td>@student.Lastname</td>
@@ -93,6 +93,7 @@ else
 
     private List<StudentDto> students = new List<StudentDto>();
     private List<GroupDto> groups = new List<GroupDto>();
+    private List<BuildingDto> buildings = new List<BuildingDto>();
     private StudentDto localstudent = new StudentDto();
 
     private bool ShowActive = true;
@@ -112,6 +113,7 @@ else
     {
         students = await AppState.ApiClient.StudentService.GetAll();
         groups = await AppState.ApiClient.GroupService.GetAll();
+        buildings = await AppState.ApiClient.BuildingService.GetAll();
 
         if (!ShowActive)
             students = students.Where(s => s.Active == true).ToList();

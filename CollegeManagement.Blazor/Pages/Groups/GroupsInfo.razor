@@ -8,7 +8,7 @@
 
 @if (group != null)
 {
-    <p>BuildingId: @group.BuildingId</p>
+    <p>Building: @building.Name</p>
     <p>DateStarted: @group.DateStarted</p>
     <p>Name: @group.Name</p>
     <p>MentorId: @group.MentorId</p>
@@ -45,10 +45,13 @@
 
     private ClassParticipantsDto participants { get; set; }
     private GroupDto group { get; set; }
+    private BuildingDto building { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         group = await AppState.ApiClient.GroupService.GetById(Id);
+        building = await AppState.ApiClient.BuildingService.GetById(Id);
+
         participants = await AppState.ApiClient.GroupService.GetParticipants(Id);
 
         await base.OnInitializedAsync();

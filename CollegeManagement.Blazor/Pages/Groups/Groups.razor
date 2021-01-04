@@ -20,7 +20,7 @@ else
 
     <table class="table mt-2">
         <tr>
-            <th>BuildingId</th>
+            <th>Building</th>
             <th>DateStarted</th>
             <th>MentorId</th>
             <th>Name</th>
@@ -28,7 +28,7 @@ else
         @foreach (var group in groups)
         {
             <tr>
-                <td>@group.BuildingId</td>
+                <td>@buildings.SingleOrDefault(s => s.Id == group.BuildingId).Name</td>
                 <td>@group.DateStarted</td>
                 <td>@group.MentorId</td>
                 <td>@group.Name</td>
@@ -80,6 +80,7 @@ else
     [CascadingParameter(Name = "AppState")] protected AppState AppState { get; set; }
 
     private List<GroupDto> groups = new List<GroupDto>();
+    private List<BuildingDto> buildings = new List<BuildingDto>();
     private GroupDto localgroup = new GroupDto();
 
     private bool editformopen = false;
@@ -96,6 +97,7 @@ else
     private async Task Refresh()
     {
         groups = await AppState.ApiClient.GroupService.GetAll();
+        buildings = await AppState.ApiClient.BuildingService.GetAll();
 
         StateHasChanged();
     }

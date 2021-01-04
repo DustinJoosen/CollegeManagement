@@ -19,6 +19,7 @@ namespace CollegeManagement.Api.Repositories
 			return await this._entity
 				.Where(s => s.CollegeId == _collegeId)
 				.Include(s => s.Group)
+				.Include(s => s.Building)
 				.SingleOrDefaultAsync(s => s.Id == id);
 		}
 	}
