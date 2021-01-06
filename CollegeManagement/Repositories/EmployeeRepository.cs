@@ -15,6 +15,14 @@ namespace CollegeManagement.Api.Repositories
 
 		}
 
+		public override async Task<List<Employee>> GetAll()
+		{
+			return await this._context.Employees
+				.Where(s => s.CollegeId == _collegeId)
+				.Include(s => s.Building)
+				.ToListAsync();
+		}
+
 		public async Task<List<Student>> GetStudents(int id)
 		{
 			return await this._context.StudentTeachers

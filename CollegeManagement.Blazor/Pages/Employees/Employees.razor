@@ -1,7 +1,178 @@
 ﻿@page "/Management/Employees"
+@layout MainLayout
+
+@inject NavigationManager uriHelper
+
+
+@{
+    string neworedit = localemployee.Id == 0 ? "new" : "edit";
+}
 
 <h3>Employees</h3>
 
-@code {
+@if (employees == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <button class="btn btn-primary" @onclick="New">New</button>
+    <button class="btn btn-primary" @onclick="Refresh">Refresh</button>
 
+    <MatCheckbox class="float-right" @bind-Value="@ShowActive" Label="Only show active employees"></MatCheckbox>
+
+    <table class="table mt-2">
+        <tr>
+            <th>Full Name</th>
+            <th>Building</th>
+            <th>EmployeeType</th>
+            <th>ImageName</th>
+        </tr>
+        @foreach (var employee in employees)
+        {
+            <tr>
+                <td>@employee.Fullname</td>
+                <td>@employee.Building.Name</td>
+                <td>@employee.EmployeeType</td>
+                <td>@employee.ImageName</td>
+                <td>
+                    <button class="btn btn-primary mr-2" @onclick="@(() => Info(employee))">Info</button>
+                    <button class="btn btn-primary mr-2" @onclick="@(() => Edit(employee))">Edit</button>
+                    <button class="btn btn-danger mr-2" @onclick="@(() => Delete(employee))">Delete</button>
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+
+<MatThemeProvider>
+    <MatDialog @bind-IsOpen="editformopen">
+        <MatDialogTitle class="text-center">
+            <h5> @neworedit Employee </h5>
+            <MatCheckbox @bind-Value="@localemployee.Active"></MatCheckbox>
+        </MatDialogTitle>
+        <MatDialogContent class="mb-1">
+            <p> <MatTextField class="form-control" @bind-Value="@localemployee.Firstname" Label="First Name"></MatTextField> </p>
+            <p> <MatTextField class="form-control" @bind-Value="@localemployee.Middlename" Label="Middle Name"></MatTextField> </p>
+            <p> <MatTextField class="form-control" @bind-Value="@localemployee.Lastname" Label="Lastname"></MatTextField> </p>
+            <p> <MatTextField class="form-control" @bind-Value="@localemployee.BuildingId" Label="Building Id"></MatTextField> </p>
+            <p> <MatSelectItem @bind-Value="@localemployee.EmployeeType" Items="@(Enum.GetValues(typeof(EmployeeType)).Cast<EmployeeType>().ToArray())" Label="Employee type"></MatSelectItem> </p>
+            <p> <MatDatePicker class="form-control" @bind-Value="localemployee.DateOfBirth" Label="BirthDate"></MatDatePicker> </p>
+            <p> <MatDatePicker class="form-control" @bind-Value="localemployee.DateOfEmployement" Label="Date started"></MatDatePicker> </p>
+            <p> <MatTextField class="form-control" @bind-Value="@localemployee.EmailAddress" Label="EmailAddress"></MatTextField> </p>
+
+        </MatDialogContent>
+        <MatDialogActions>
+            <button class="btn btn-outline-danger mr-2 mt-2" @onclick="Cancel">Cancel</button>
+            <button class="btn btn-primary mr-2 mt-2" @onclick="Save">Save</button>
+        </MatDialogActions>
+    </MatDialog>
+</MatThemeProvider>
+
+<MatThemeProvider>
+    <MatDialog @bind-IsOpen="deleteformopen">
+        <MatDialogTitle class="text-center">
+            <h5> Delete @localemployee.Fullname</h5>
+        </MatDialogTitle>
+        <MatDialogContent class="mb-1">
+            <p class="text-center text-danger"> Are you sure you want to delete employee @localemployee.Fullname?</p>
+        </MatDialogContent>
+        <MatDialogActions>
+            <button class="btn btn-outline-primary mr-2 mt-2" @onclick="Cancel">Cancel</button>
+            <button class="btn btn-danger mr-2 mt-2" @onclick="DeleteOk">Delete</button>
+        </MatDialogActions>
+    </MatDialog>
+</MatThemeProvider>
+
+@code {
+    [CascadingParameter(Name = "AppState")] protected AppState AppState { get; set; }
+
+    private List<EmployeeDto> employees = new List<EmployeeDto>();
+    private EmployeeDto localemployee = new EmployeeDto();
+
+    private bool editformopen = false;
+    private bool deleteformopen = false;
+
+    private bool _showactive = false;
+    public bool ShowActive
+    {
+        get => _showactive;
+        set
+        {
+            _showactive = value;
+            Refresh();
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        await Refresh();
+    }
+
+    private async Task Refresh()
+    {
+        employees = await AppState.ApiClient.EmployeeService.GetAll();
+
+        if (ShowActive)
+            employees = employees.Where(s => s.Active == true).ToList();
+
+        StateHasChanged();
+    }
+
+    private async Task New()
+    {
+        localemployee = new EmployeeDto();
+        editformopen = true;
+    }
+
+    private async Task Edit(EmployeeDto employee)
+    {
+        localemployee = employee;
+        editformopen = true;
+    }
+
+    private async Task Info(EmployeeDto employee)
+    {
+        uriHelper.NavigateTo($"/Management/Employees/{employee.Id}");
+    }
+
+    private async Task Delete(EmployeeDto employee)
+    {
+        localemployee = employee;
+        deleteformopen = true;
+    }
+
+    private async Task Save()
+    {
+        if (localemployee.Id == 0)
+        {
+            await AppState.ApiClient.EmployeeService.Create(localemployee);
+        }
+        else
+        {
+            await AppState.ApiClient.EmployeeService.Update(localemployee);
+        }
+
+        Cancel();
+        await Refresh();
+    }
+
+    private async Task DeleteOk()
+    {
+        if (localemployee != null)
+            await AppState.ApiClient.EmployeeService.Remove(localemployee);
+
+        Cancel();
+        await Refresh();
+    }
+
+    private void Cancel()
+    {
+        editformopen = false;
+        deleteformopen = false;
+    }
 }

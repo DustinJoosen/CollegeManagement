@@ -20,18 +20,18 @@ else
 
     <table class="table mt-2">
         <tr>
+            <th>Name</th>
             <th>Building</th>
             <th>DateStarted</th>
             <th>MentorId</th>
-            <th>Name</th>
         </tr>
         @foreach (var group in groups)
         {
             <tr>
+                <td>@group.Name</td>
                 <td>@buildings.SingleOrDefault(s => s.Id == group.BuildingId).Name</td>
                 <td>@group.DateStarted</td>
-                <td>@group.MentorId</td>
-                <td>@group.Name</td>
+                <td><a href="/Management/Employees/@group.MentorId">@group.MentorId</a></td>
                 <td>
                     <button class="btn btn-primary mr-2" @onclick="@(() => Info(group))">Info</button>
                     <button class="btn btn-primary mr-2" @onclick="@(() => Edit(group))">Edit</button>
@@ -49,8 +49,8 @@ else
             <h5> @neworedit Group </h5>
         </MatDialogTitle>
         <MatDialogContent class="mb-1">
-            <p> <MatTextField class="form-control" @bind-Value="@localgroup.BuildingId" Label="Building Id"></MatTextField> </p>
             <p> <MatTextField class="form-control" @bind-Value="@localgroup.Name" Label="Class Name"></MatTextField> </p>
+            <p> <MatTextField class="form-control" @bind-Value="@localgroup.BuildingId" Label="Building Id"></MatTextField> </p>
             <p> <MatTextField class="form-control" @bind-Value="@localgroup.MentorId" Label="Mentor Id"></MatTextField> </p>
             <p> <MatDatePicker class="form-control" @bind-Value="localgroup.DateStarted" Label="Date started"></MatDatePicker> </p>
         </MatDialogContent>
@@ -108,20 +108,20 @@ else
         editformopen = true;
     }
 
-    private async Task Edit(GroupDto clas)
+    private async Task Edit(GroupDto group)
     {
-        localgroup = clas;
+        localgroup = group;
         editformopen = true;
     }
 
-    private async Task Info(GroupDto clas)
+    private async Task Info(GroupDto group)
     {
-        uriHelper.NavigateTo($"/Teaching/Groups/{clas.Id}");
+        uriHelper.NavigateTo($"/Teaching/Groups/{group.Id}");
     }
 
-    private async Task Delete(GroupDto clas)
+    private async Task Delete(GroupDto group)
     {
-        localgroup = clas;
+        localgroup = group;
         deleteformopen = true;
     }
 

@@ -19,15 +19,13 @@ else
     <button class="btn btn-primary" @onclick="New">New</button>
     <button class="btn btn-primary" @onclick="Refresh">Refresh</button>
 
-    <MatCheckbox cla ss="float-left" @bind-Value="@ShowActive" Label="Only show active students"></MatCheckbox>
+    <MatCheckbox class="float-right" @bind-Value="@ShowActive" Label="Only show active students"></MatCheckbox>
 
     <table class="table mt-2">
         <tr>
             <th>Building</th>
             <th>Group</th>
-            <th>FirstName</th>
-            <th>MiddleName</th>
-            <th>LastName</th>
+            <th>Name</th>
             <th>ImageName</th>
             <th>Actions</th>
         </tr>
@@ -36,9 +34,7 @@ else
             <tr>
                 <td>@buildings.SingleOrDefault(s => s.Id == student.BuildingId).Name</td>
                 <td><a href="/Teaching/Groups/@student.GroupId">@groups.SingleOrDefault(s => s.Id == @student.GroupId).Name </a></td>
-                <td>@student.Firstname</td>
-                <td>@student.Middlename</td>
-                <td>@student.Lastname</td>
+                <td>@student.Fullname</td>
                 <td>@student.ImageName</td>
                 <td>
                     <button class="btn btn-primary mr-2" @onclick="@(() => Info(@student))">Info</button>
@@ -96,7 +92,16 @@ else
     private List<BuildingDto> buildings = new List<BuildingDto>();
     private StudentDto localstudent = new StudentDto();
 
-    private bool ShowActive = true;
+    private bool _showactive = false;
+    public bool ShowActive
+    {
+        get => _showactive;
+        set
+        {
+            _showactive = value;
+            Refresh();
+        }
+    }
 
     private bool editformopen = false;
     private bool deleteformopen = false;
@@ -115,7 +120,7 @@ else
         groups = await AppState.ApiClient.GroupService.GetAll();
         buildings = await AppState.ApiClient.BuildingService.GetAll();
 
-        if (!ShowActive)
+        if (ShowActive)
             students = students.Where(s => s.Active == true).ToList();
 
         StateHasChanged();

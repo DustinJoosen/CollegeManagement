@@ -1,9 +1,61 @@
 ﻿@page "/Management/Employees/{Id:int}"
+@layout MainLayout
 
 <h3>EmployeesInfo</h3>
 <h5>Welcome employee @Id</h5>
 
+@if (employee != null)
+{
+    <p>Building: @employee.BuildingId</p>
+    <p>Employee type: @employee.EmployeeType</p>
+    <p>FirstName: @employee.Firstname</p>
+    @if (!String.IsNullOrEmpty(employee.Middlename))
+    {
+        <p>Middlename: @employee.Middlename</p>
+    }
+    <p>Lastname: @employee.Lastname</p>
+    <p>Birthdate: @employee.DateOfBirth</p>
+    <p>Date Of Employement: @employee.DateOfEmployement</p>
+    <p>EmailAddress: @employee.EmailAddress</p>
+    <p>ImageName: @employee.ImageName</p>
+
+    @if (employee.EmployeeType == EmployeeType.Teacher && students != null)
+    {
+        <hr />
+        <h3>All Students</h3>
+        <table class="table">
+            <tr>
+                <td>Full Name</td>
+                <td>Class</td>
+            </tr>
+            @foreach(var student in students)
+            {
+                <tr>
+                    <td>@student.Fullname</td>
+                    <td><a href="/Teaching/Students/@student.Id">@groups.SingleOrDefault(s => s.Id == student.GroupId).Name</a></td>
+                </tr>
+            }
+        </table>
+    }
+
+}
+
 @code {
+    [CascadingParameter(Name = "AppState")] protected AppState AppState { get; set; }
+
     [Parameter]
     public int Id { get; set; }
+
+    private EmployeeDto employee { get; set; }
+    private List<StudentDto> students { get; set; }
+    private List<GroupDto> groups { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        employee = await AppState.ApiClient.EmployeeService.GetById(Id);
+        students = await AppState.ApiClient.EmployeeService.GetStudents(Id);
+        groups = await AppState.ApiClient.GroupService.GetAll();
+
+        await base.OnInitializedAsync();
+    }
 }

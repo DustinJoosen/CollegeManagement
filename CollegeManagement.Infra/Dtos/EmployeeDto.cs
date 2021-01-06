@@ -20,6 +20,14 @@ namespace CollegeManagement.Infra.Dtos
 		public string Firstname { get; set; }
 		public string Middlename { get; set; }
 		public string Lastname { get; set; }
+		public string Fullname
+		{
+			get
+			{
+				return String.IsNullOrEmpty(Middlename) ? $"{Firstname} {Lastname}" : $"{Firstname} {Middlename} {Lastname}";
+			}
+		}
+
 		public DateTime DateOfBirth { get; set; }
 		public DateTime DateOfEmployement { get; set; }
 		public bool Active { get; set; }

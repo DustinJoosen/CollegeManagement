@@ -1,7 +1,148 @@
 ﻿@page "/Management/Payments"
+@layout MainLayout 
+
+@{
+    string neworedit = localpayment.Id == 0 ? "new" : "edit";
+}
 
 <h3>Payments</h3>
 
-@code {
+@if (payments == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
 
+    <button class="btn btn-primary" @onclick="New">New</button>
+    <button class="btn btn-primary" @onclick="Refresh">Refresh</button>
+
+    <table class="table mt-2">
+        <tr>
+            <th>Employee</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>SpecialNotes</th>
+            <th>Actions</th>
+        </tr>
+        @foreach (var payment in payments)
+        {
+            <tr>
+                <td><a href="/Management/Employees/@payment.EmployeeId">@payment.Employee.Fullname</a></td>
+                <td>@payment.Amount</td>
+                <td>@payment.Status</td>
+                <td>@payment.SpecialNotes</td>
+                <td>
+                    <button class="btn btn-primary mr-2" @onclick="@(() => Edit(payment))">Edit</button>
+                    <button class="btn btn-danger mr-2" @onclick="@(() => Delete(payment))">Delete</button>
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+
+<MatThemeProvider>
+    <MatDialog @bind-IsOpen="@editformopen">
+        <MatDialogTitle class="text-center">
+            <h5> @neworedit Payment </h5>
+        </MatDialogTitle>
+        <MatDialogContent class="mb-1">
+            <p> <MatTextField class="form-control" @bind-Value="@localpayment.EmployeeId" Label="EmployeeId"></MatTextField> </p>
+            <p> <MatTextField class="form-control" @bind-Value="@localpayment.Amount" Label="Amount"></MatTextField> </p>
+            <p> <MatSelectItem @bind-Value="@localpayment.Status" Items="@(Enum.GetValues(typeof(PaymentStatus)).Cast<PaymentStatus>().ToArray())" Label="Status"></MatSelectItem> </p>
+            <p> <MatTextField TextArea="true" class="form-control" @bind-Value="@localpayment.SpecialNotes" Label="Special Notes"></MatTextField> </p>
+        </MatDialogContent>
+        <MatDialogActions>
+            <button class="btn btn-outline-danger mr-2 mt-2" @onclick="Cancel">Cancel</button>
+            <button class="btn btn-primary mr-2 mt-2" @onclick="Save">Save</button>
+        </MatDialogActions>
+    </MatDialog>
+</MatThemeProvider>
+
+<MatThemeProvider>
+    <MatDialog @bind-IsOpen="deleteformopen">
+        <MatDialogTitle class="text-center">
+            <h5> Delete payment </h5>
+        </MatDialogTitle>
+        <MatDialogContent class="mb-1">
+            <p class="text-center text-danger"> Are you sure you want to delete this payment?</p>
+        </MatDialogContent>
+        <MatDialogActions>
+            <button class="btn btn-outline-primary mr-2 mt-2" @onclick="Cancel">Cancel</button>
+            <button class="btn btn-danger mr-2 mt-2" @onclick="DeleteOk">Delete</button>
+        </MatDialogActions>
+    </MatDialog>
+</MatThemeProvider>
+
+@code {
+    [CascadingParameter(Name = "AppState")] protected AppState AppState { get; set; }
+
+    private List<PayCheckDto> payments = new List<PayCheckDto>();
+    private PayCheckDto localpayment = new PayCheckDto();
+
+    private bool editformopen = false;
+    private bool deleteformopen = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        await Refresh();
+    }
+
+    private async Task Refresh()
+    {
+        payments = await AppState.ApiClient.PayCheckService.GetAll();
+        StateHasChanged();
+    }
+
+    private async Task New()
+    {
+        localpayment = new PayCheckDto();
+        editformopen = true;
+    }
+
+    private async Task Edit(PayCheckDto payment)
+    {
+        localpayment = payment;
+        editformopen = true;
+    }
+
+    private async Task Delete(PayCheckDto payment)
+    {
+        localpayment = payment;
+        deleteformopen = true;
+    }
+
+    private async Task Save()
+    {
+        if (localpayment.Id == 0)
+        {
+            await AppState.ApiClient.PayCheckService.Create(localpayment);
+        }
+        else
+        {
+            await AppState.ApiClient.PayCheckService.Update(localpayment);
+        }
+
+        Cancel();
+        await Refresh();
+    }
+
+    private async Task DeleteOk()
+    {
+        if (localpayment != null)
+            await AppState.ApiClient.PayCheckService.Remove(localpayment);
+
+        Cancel();
+        await Refresh();
+    }
+
+    private void Cancel()
+    {
+        editformopen = false;
+        deleteformopen = false;
+    }
 }
