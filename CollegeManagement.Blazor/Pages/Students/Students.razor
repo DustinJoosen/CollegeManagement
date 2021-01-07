@@ -54,10 +54,9 @@ else
             <MatCheckbox @bind-Value="@localstudent.Active"></MatCheckbox>
         </MatDialogTitle>
         <MatDialogContent class="mb-1">
-            <p> <MatTextField class="form-control" @bind-Value="@localstudent.BuildingId" Label="Building Id"></MatTextField> </p>
+            <!--<p>--> @*<MatTextField class="form-control" @bind-Value="@localstudent.BuildingId" Label="Building Id"></MatTextField>*@ <!--</p>-->
             <p> <MatTextField class="form-control" @bind-Value="@localstudent.GroupId" Label="Group Id"></MatTextField> </p>
             <p> <MatTextField class="form-control" @bind-Value="@localstudent.Firstname" Label="First Name"></MatTextField> </p>
-            <p> <MatTextField class="form-control" @bind-Value="@localstudent.Middlename" Label="Middle Name"></MatTextField> </p>
             <p> <MatTextField class="form-control" @bind-Value="@localstudent.Lastname" Label="Last Name"></MatTextField> </p>
             <p> <MatDatePicker class="form-control" @bind-Value="localstudent.DateOfBirth" Label="Date of birth"></MatDatePicker> </p>
             <p> <MatTextField class="form-control" @bind-Value="@localstudent.EmailAddress" Label="emailaddress" Type="email"></MatTextField> </p>
@@ -151,6 +150,8 @@ else
 
     private async Task Save()
     {
+        localstudent.BuildingId = localstudent.Building.Id;
+
         if (localstudent.Id == 0)
         {
             await AppState.ApiClient.StudentService.Create(localstudent);

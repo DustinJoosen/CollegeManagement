@@ -32,7 +32,7 @@ else
         {
             <tr>
                 <td>@employee.Fullname</td>
-                <td>@employee.Building.Name</td>
+                <td>@buildings.SingleOrDefault(s => s.Id == employee.BuildingId).Name</td>
                 <td>@employee.EmployeeType</td>
                 <td>@employee.ImageName</td>
                 <td>
@@ -54,11 +54,17 @@ else
         </MatDialogTitle>
         <MatDialogContent class="mb-1">
             <p> <MatTextField class="form-control" @bind-Value="@localemployee.Firstname" Label="First Name"></MatTextField> </p>
-            <p> <MatTextField class="form-control" @bind-Value="@localemployee.Middlename" Label="Middle Name"></MatTextField> </p>
             <p> <MatTextField class="form-control" @bind-Value="@localemployee.Lastname" Label="Lastname"></MatTextField> </p>
-            <p> @*<MatTextField class="form-control" @bind-Value="@localemployee.BuildingId" Label="Building Id"></MatTextField>*@ </p>
-            <p> <MatSelectItem @bind-Value="@localemployee.Building" Label="Building" Items="@buildings" ></MatSelectItem> </p>
-            <p> <MatSelectItem @bind-Value="@localemployee.EmployeeType" Items="@(Enum.GetValues(typeof(EmployeeType)).Cast<EmployeeType>().ToArray())" Label="Employee type"></MatSelectItem> </p>
+            <p>
+                @if (buildings != null)
+                {
+                    <BlazoredTypeahead ShowDropDownOnFocus="true" SearchMethod="SearchBuilding" placeholder="Building" @bind-Value="@localemployee.Building">
+                        <SelectedTemplate>@context.Name</SelectedTemplate>
+                        <ResultTemplate>@context.Name</ResultTemplate>
+                    </BlazoredTypeahead>
+                }
+            </p>
+            <p> <MatSelectItem FullWidth="true" @bind-Value="@localemployee.EmployeeType" Items="@(Enum.GetValues(typeof(EmployeeType)).Cast<EmployeeType>().ToArray())" Label="Employee type"></MatSelectItem> </p>
             <p> <MatDatePicker class="form-control" @bind-Value="localemployee.DateOfBirth" Label="BirthDate"></MatDatePicker> </p>
             <p> <MatDatePicker class="form-control" @bind-Value="localemployee.DateOfEmployement" Label="Date started"></MatDatePicker> </p>
             <p> <MatTextField class="form-control" @bind-Value="@localemployee.EmailAddress" Label="EmailAddress"></MatTextField> </p>
@@ -180,5 +186,10 @@ else
     {
         editformopen = false;
         deleteformopen = false;
+    }
+
+    private async Task<IEnumerable<BuildingDto>> SearchBuilding(string searchText)
+    {
+        return await Task.FromResult(buildings.Where(s => s.Name.ToLower().Contains(searchText.ToLower())).ToList());
     }
 }

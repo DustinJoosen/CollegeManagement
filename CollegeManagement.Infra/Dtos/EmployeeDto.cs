@@ -18,16 +18,8 @@ namespace CollegeManagement.Infra.Dtos
 
 		public EmployeeType EmployeeType { get; set; }
 		public string Firstname { get; set; }
-		public string Middlename { get; set; }
 		public string Lastname { get; set; }
-		public string Fullname
-		{
-			get
-			{
-				return String.IsNullOrEmpty(Middlename) ? $"{Firstname} {Lastname}" : $"{Firstname} {Middlename} {Lastname}";
-			}
-		}
-
+		public string Fullname { get => $"{Firstname} {Lastname}"; }
 		public DateTime DateOfBirth { get; set; }
 		public DateTime DateOfEmployement { get; set; }
 		public bool Active { get; set; }
