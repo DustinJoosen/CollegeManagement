@@ -10,7 +10,7 @@
 
     <div class="main">
         <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+            <p style="text-align:center">@collegeName</p>
         </div>
 
         <div class="content px-4">
@@ -27,10 +27,14 @@
 
 @code{
 
+    protected string collegeName { get; set; }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender)
             return;
+
+        collegeName = AppState.ApiClient.CollegeService.GetById(AppState.CollegeId).Result.Name;
 
         AppState.Initialized = true;
         this.StateHasChanged();

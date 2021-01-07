@@ -1,7 +1,38 @@
 ﻿@page "/Settings"
+@layout MainLayout
 
-<h3>Settings</h3>
+
+<h1>College settings</h1>
+
+@if (college != null)
+{
+    <MatTextField @bind-Value="@college.Name" Label="College Name"></MatTextField>
+    <MatFileUpload Label="College logo" AllowMultiple="false"></MatFileUpload>
+    <img src="@college.ImageUrl" class="float-right" />
+}
+
+<button class="btn btn-primary" @onclick="Save">Save</button>
 
 @code {
+    [CascadingParameter(Name = "AppState")] protected AppState AppState { get; set; }
 
+    private CollegeDto college { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            await Refresh();
+    }
+
+    private async Task Refresh()
+    {
+        college = await AppState.ApiClient.CollegeService.GetById(AppState.CollegeId);
+        StateHasChanged();
+    }
+
+    private async Task Save()
+    {
+        await AppState.ApiClient.CollegeService.Update(college);
+        await Refresh();
+    }
 }

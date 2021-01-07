@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using Blazored.LocalStorage;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,24 +31,17 @@ namespace CollegeManagement.Blazor
 			services.AddRazorPages();
 			services.AddServerSideBlazor();
 
+			services.AddBlazoredLocalStorage(config => config.JsonSerializerOptions.WriteIndented = true);
+			services.AddScoped<LocalStorageManager>();
+
 			services.AddScoped<AppState>();
 
 			var apiUrls = new ApiUrls();
 			Configuration.GetSection("ApiUrls").Bind(apiUrls);
 			services.AddSingleton<ApiUrls>(apiUrls);
 
-
 			services.AddHttpClient<ApiClient>(s =>
 				s.BaseAddress = new Uri(apiUrls.CollegeManagementApi));
-				
-
-
-
-//			services.AddHttpClient<WeegRegistraties.ApiClient.ApiClient>(s =>
-//s.BaseAddress = new Uri(apiUrls.WeegregistratiesApiUrl))
-//	.AddTransientHttpErrorPolicy(builder =>
-//		builder.WaitAndRetryAsync(3, retryCount =>
-//			TimeSpan.FromSeconds(Math.Pow(2, retryCount))));
 
 		}
 

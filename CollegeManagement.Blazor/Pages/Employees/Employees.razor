@@ -56,7 +56,8 @@ else
             <p> <MatTextField class="form-control" @bind-Value="@localemployee.Firstname" Label="First Name"></MatTextField> </p>
             <p> <MatTextField class="form-control" @bind-Value="@localemployee.Middlename" Label="Middle Name"></MatTextField> </p>
             <p> <MatTextField class="form-control" @bind-Value="@localemployee.Lastname" Label="Lastname"></MatTextField> </p>
-            <p> <MatTextField class="form-control" @bind-Value="@localemployee.BuildingId" Label="Building Id"></MatTextField> </p>
+            <p> @*<MatTextField class="form-control" @bind-Value="@localemployee.BuildingId" Label="Building Id"></MatTextField>*@ </p>
+            <p> <MatSelectItem @bind-Value="@localemployee.Building" Label="Building" Items="@buildings" ></MatSelectItem> </p>
             <p> <MatSelectItem @bind-Value="@localemployee.EmployeeType" Items="@(Enum.GetValues(typeof(EmployeeType)).Cast<EmployeeType>().ToArray())" Label="Employee type"></MatSelectItem> </p>
             <p> <MatDatePicker class="form-control" @bind-Value="localemployee.DateOfBirth" Label="BirthDate"></MatDatePicker> </p>
             <p> <MatDatePicker class="form-control" @bind-Value="localemployee.DateOfEmployement" Label="Date started"></MatDatePicker> </p>
@@ -91,6 +92,8 @@ else
     private List<EmployeeDto> employees = new List<EmployeeDto>();
     private EmployeeDto localemployee = new EmployeeDto();
 
+    private List<BuildingDto> buildings = new List<BuildingDto>();
+
     private bool editformopen = false;
     private bool deleteformopen = false;
 
@@ -116,6 +119,7 @@ else
     private async Task Refresh()
     {
         employees = await AppState.ApiClient.EmployeeService.GetAll();
+        buildings = await AppState.ApiClient.BuildingService.GetAll();
 
         if (ShowActive)
             employees = employees.Where(s => s.Active == true).ToList();
@@ -148,6 +152,8 @@ else
 
     private async Task Save()
     {
+        localemployee.BuildingId = localemployee.Building.Id;
+
         if (localemployee.Id == 0)
         {
             await AppState.ApiClient.EmployeeService.Create(localemployee);
